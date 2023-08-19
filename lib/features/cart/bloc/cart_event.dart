@@ -15,4 +15,7 @@ class CartRemoveFromCartEvent extends CartEvent {
   });
 }
 
-class CartItemsCountEvent extends CartEvent {}
+class CartItemsCountEvent extends CartEvent {
+  final double cartAmount;
+  CartItemsCountEvent({required this.cartAmount});
+}

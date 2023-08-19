@@ -51,12 +51,12 @@ class ProductTileWidget extends StatelessWidget {
                       onPressed: () {
                         if (state.runtimeType == CartSuccessState) {
                           cartBloc.add(CartRemoveFromCartEvent(productDataModel: productDataModel));
-                          cartBloc.add(CartItemsCountEvent());
+                          cartBloc.add(CartItemsCountEvent(cartAmount: -productDataModel.price));
                         }
                         else if (state.runtimeType == HomeLoadedSuccessState) {
                           homeBloc.add(HomeProductCartButtonClickedEvent(
                             clickedProduct: productDataModel));
-                          cartBloc.add(CartItemsCountEvent());
+                          cartBloc.add(CartItemsCountEvent(cartAmount: productDataModel.price));
                         }
                       },
                       icon: selectIcon(),

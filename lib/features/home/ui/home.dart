@@ -16,17 +16,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late HomeBloc homeBloc;
+  // late CartBloc
 
   @override
   void initState() {
-    Future.delayed(
-        Duration(seconds: 0), () => homeBloc.add(HomeInitialEvent()));
+    homeBloc = BlocProvider.of<HomeBloc>(context);
+    homeBloc.add(HomeInitialEvent());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    homeBloc = BlocProvider.of<HomeBloc>(context, listen: false);
     return BlocConsumer<HomeBloc, HomeState>(
       bloc: homeBloc,
       listenWhen: (previous, current) => current is HomeActionState,
@@ -39,11 +39,15 @@ class _HomeState extends State<Home> {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Wishlist()));
         } else if (state is HomeProductItemCartedActionState) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Item Carted'), duration: Duration(milliseconds: 300),));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Item Carted'),
+            duration: Duration(milliseconds: 300),
+          ));
         } else if (state is HomeProductItemWishlistedActionState) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Item Wishlisted'), duration: Duration(milliseconds: 300),));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Item Wishlisted'),
+            duration: Duration(milliseconds: 300),
+          ));
         }
       },
       builder: (context, state) {
@@ -80,10 +84,12 @@ class _HomeState extends State<Home> {
                         child: CircleAvatar(
                           radius: 10,
                           child: BlocBuilder<CartBloc, CartState>(
-                            buildWhen:(previous, current) => current.runtimeType == CartItemsCountState,
+                            buildWhen: (previous, current) =>
+                                current.runtimeType == CartItemsCountState,
                             builder: (context, state) {
                               if (state.runtimeType == CartItemsCountState) {
-                                CartItemsCountState countState = state as CartItemsCountState; 
+                                CartItemsCountState countState =
+                                    state as CartItemsCountState;
                                 return Text("${countState.cartCount}");
                               }
                               return Text("0");
@@ -94,6 +100,15 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 ],
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: null,
+                child: BlocBuilder<CartBloc, CartState>(
+                  buildWhen: (previous, current) => current.runtimeType == CartItemsCountState,
+                  builder: (context, state) {
+                    return Text("${state.cartAmount}");
+                  },
+                ),
               ),
               body: ListView.builder(
                   itemCount: successState.products.length,
@@ -106,8 +121,9 @@ class _HomeState extends State<Home> {
             );
 
           case HomeErrorState:
-            final homeErrorSate =state as HomeErrorState;
-            return Scaffold(body: Center(child: Text('${homeErrorSate.errorMessage}')));
+            final homeErrorSate = state as HomeErrorState;
+            return Scaffold(
+                body: Center(child: Text('${homeErrorSate.errorMessage}')));
           default:
             return SizedBox();
         }
