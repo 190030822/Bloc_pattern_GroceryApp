@@ -2,10 +2,9 @@
 
 
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:http/http.dart' as http;
-import 'package:flutter_bloc_tutorial/features/home/models/home_product_data_model.dart';
+import 'package:flutter_bloc_tutorial/features/product/models/home_product_data_model.dart';
 
 class ItemsRepo {
 

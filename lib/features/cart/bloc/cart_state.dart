@@ -22,9 +22,9 @@ class CartSuccessState extends CartState {
   }) : super(cartCount, cartAmount);
 }
 
-class CartRemoveItemMessageState extends CartActionState {
+class CartRemoveItemMessageActionState extends CartActionState {
   final ProductDataModel removedItem;
-  CartRemoveItemMessageState(int cartCount, double cartAmount, this.removedItem) : super(cartCount, cartAmount);
+  CartRemoveItemMessageActionState(int cartCount, double cartAmount, this.removedItem) : super(cartCount, cartAmount);
 }
 
 class CartItemsCountState extends CartState {
