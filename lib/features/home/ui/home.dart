@@ -20,11 +20,16 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    homeBloc = BlocProvider.of<HomeBloc>(context);
-    homeBloc.add(HomeInitialEvent());
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    homeBloc = BlocProvider.of<HomeBloc>(context);
+    homeBloc.add(HomeInitialEvent());
+  }
+  
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeBloc, HomeState>(
@@ -122,7 +127,7 @@ class _HomeState extends State<Home> {
           case HomeErrorState:
             final homeErrorSate = state as HomeErrorState;
             return Scaffold(
-                body: Center(child: Text('${homeErrorSate.errorMessage}')));
+                body: Center(child: Text('${homeErrorSate.errorMessage}', style: TextStyle(color: Colors.pink),)));
           default:
             return SizedBox();
         }

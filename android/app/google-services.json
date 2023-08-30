@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "254482251404",
+    "project_id": "grocery-7c3f7",
+    "storage_bucket": "grocery-7c3f7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254482251404:android:6791c3bdd43d0fc2c185a9",
+        "android_client_info": {
+          "package_name": "com.example.flutter_bloc_tutorial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254482251404-i5mkig8ipkm2s3goqlmnu8e2urnubbce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWIYT7J5fiLo2Onw2rroXJqHZNovc4YH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254482251404-i5mkig8ipkm2s3goqlmnu8e2urnubbce.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
