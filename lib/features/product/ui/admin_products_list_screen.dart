@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_tutorial/configuration/utils/common_footer.dart';
 import 'package:flutter_bloc_tutorial/features/error/bloc/error_bloc.dart';
 import 'package:flutter_bloc_tutorial/features/product/bloc/admin_product_bloc.dart';
-import 'package:flutter_bloc_tutorial/features/product/models/home_product_data_model.dart';
 import 'package:flutter_bloc_tutorial/features/product/ui/admin_add_new_product.dart';
 import 'package:flutter_bloc_tutorial/features/product/ui/admin_product_tile_widget.dart';
 
@@ -34,28 +34,41 @@ class _AdminProductsListScreenState extends State<AdminProductsListScreen> {
         title: Text("Products List"),
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewProduct())),
+            onPressed: () => Navigator.pushNamed(context, '/adminAddNewProduct'),
             icon: Icon(Icons.add_box_outlined)
           )
         ],
       ),
+      bottomNavigationBar: CommonFooterMenu(context).getFooterMenu(1),
       body: BlocConsumer<AdminProductBloc, AdminProductState>(
         listenWhen: (previous, current) => current is AdminProductListenState,
         buildWhen: (previous, current) => current is! AdminProductListenState,
         listener: (context, state) {
-          if (state.runtimeType == AdminProductsErrorState) {
-            AdminProductsErrorState adminProductsErrorState = state as AdminProductsErrorState;
-              showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                  title: Text("ERROR", style: TextStyle(color: Colors.red),),
-                  content: Text(adminProductsErrorState.errMsg),
-                  actions: [
-                    TextButton(onPressed: () => Navigator.pop(context), child: Text("OK")),
-                  ],
-                )
-              );
-          }
+            switch (state.runtimeType) {
+              case AdminProductsErrorState:
+                {
+                  AdminProductsErrorState adminProductsErrorState = state as AdminProductsErrorState;
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: Text("ERROR", style: TextStyle(color: Colors.red),),
+                      content: Text(adminProductsErrorState.errMsg),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(context), child: Text("OK")),
+                      ],
+                    )
+                  );
+                  break;
+                }
+              case AdminAddProductSuccessState:
+                {
+                  AdminAddProductSuccessState adminAddProductSuccessState = state as AdminAddProductSuccessState;
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(adminAddProductSuccessState.successMsg)));
+                  break;
+                }
+              default:
+                {}
+            }
         },
         builder: (context, state) {
           

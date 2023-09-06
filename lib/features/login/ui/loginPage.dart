@@ -22,14 +22,14 @@ class _LoginState extends State<Login> {
             children: [
               TextButton(
                 style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blue)),
-                onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Admin())),
+                onPressed: () => Navigator.of(context).pushReplacementNamed('/adminHome'),
                 child: Text("Admin Page"),
               ),
               TextButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll(Colors.orange),
                 ),
-                onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home())),
+                onPressed: () => Navigator.of(context).pushReplacementNamed('/userHome'),
                 child: Text("Users Page"),
               ),
             ],

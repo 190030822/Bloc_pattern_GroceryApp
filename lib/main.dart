@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_tutorial/configuration/routes/app_route.dart';
 import 'package:flutter_bloc_tutorial/data/cart_items.dart';
 import 'package:flutter_bloc_tutorial/features/admin/bloc/admin_bloc.dart';
 import 'package:flutter_bloc_tutorial/features/cart/bloc/cart_bloc.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_bloc_tutorial/features/error/bloc/error_bloc.dart';
 import 'package:flutter_bloc_tutorial/features/home/bloc/home_bloc.dart';
 import 'package:flutter_bloc_tutorial/features/login/ui/loginPage.dart';
 import 'package:flutter_bloc_tutorial/features/product/bloc/admin_product_bloc.dart';
-import 'package:flutter_bloc_tutorial/features/product/bloc/product_bloc.dart';
+import 'package:flutter_bloc_tutorial/features/product/bloc/bloc/product_bloc.dart';
 import 'package:flutter_bloc_tutorial/firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +24,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    AppRouter _appRouter = AppRouter();
     return MultiBlocProvider(
       providers: [
         Provider<CartRepo>(
@@ -31,13 +33,13 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
             create: (context) =>
-                HomeBloc(Provider.of<CartRepo>(context, listen: false))),
+                ProductBloc()),
         BlocProvider(
             create: (context) =>
-                CartBloc(Provider.of<CartRepo>(context, listen: false))),
+                HomeBloc()),
         BlocProvider(
             create: (context) =>
-                ProductBloc(Provider.of<CartRepo>(context, listen: false))),
+                CartBloc()),
         BlocProvider<ErrorBloc>(create: (context) => ErrorBloc(), lazy: false),
         BlocProvider(create: (context) => AdminBloc()),
         BlocProvider(create: (context) => AdminProductBloc()),
@@ -48,7 +50,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.teal,
           useMaterial3: true,
         ),
-        home: Login(),
+        onGenerateRoute: _appRouter.onGenerateRoute,
       ),
     );
   }

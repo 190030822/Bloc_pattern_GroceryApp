@@ -17,10 +17,6 @@ class AdminProductsLoadedState extends AdminProductState {
   AdminProductsLoadedState({required this.products}) {}
 }
 
-class AdminAddProductErrorState extends AdminProductListenState {
-  final String errMsg;
-  AdminAddProductErrorState({required this.errMsg});
-}
 
 class AdminAddProductSuccessState extends AdminProductListenState {
   final String successMsg;

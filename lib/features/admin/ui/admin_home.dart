@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_tutorial/configuration/utils/common_footer.dart';
 import 'package:flutter_bloc_tutorial/constants.dart';
 
 class AdminHome extends StatefulWidget {
@@ -12,10 +13,45 @@ class _AdminHomeState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        width: 250,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: figmaOrange,
+              ),
+              child: Text(
+                'Grocery',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: CircleAvatar(child: Icon(Icons.person)),
+              title: Text('Profile'),
+              onTap: () {
+                Navigator.pop(context); 
+              },
+            ),
+            ListTile(
+              leading: CircleAvatar(child: Icon(Icons.logout)),
+              title: Text('Logout'),
+              onTap: () {
+                Navigator.pop(context); 
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: Text("Grocery Admin"),
         centerTitle: true,
       ),
+      bottomNavigationBar: CommonFooterMenu(context).getFooterMenu(0),
       body: Container(
          margin: EdgeInsets.all(10),
         child: Column(

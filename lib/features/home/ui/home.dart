@@ -38,11 +38,9 @@ class _HomeState extends State<Home> {
       buildWhen: (previous, current) => current is! HomeActionState,
       listener: (context, state) {
         if (state is HomeNavigateToCartPageActionState) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Cart()));
+          Navigator.pushNamed(context, '/userCart');
         } else if (state is HomeNavigateToWishlistPageActionState) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Wishlist()));
+          Navigator.pushNamed(context, '/userWishList');
         } else if (state is HomeProductItemCartedActionState) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Item Carted'),
@@ -89,12 +87,12 @@ class _HomeState extends State<Home> {
                           radius: 10,
                           child: BlocBuilder<CartBloc, CartState>(
                             buildWhen: (previous, current) =>
-                                current.runtimeType == CartItemsCountState,
+                                current.runtimeType == CartSuccessState,
                             builder: (context, state) {
-                              if (state.runtimeType == CartItemsCountState) {
-                                CartItemsCountState countState =
-                                    state as CartItemsCountState;
-                                return Text("${countState.cartCount}");
+                              if (state.runtimeType == CartSuccessState) {
+                                CartSuccessState cartSuccessState =
+                                    state as CartSuccessState;
+                                return Text("${cartSuccessState.cartItems.length}");
                               }
                               return Text("0");
                             },
@@ -108,9 +106,9 @@ class _HomeState extends State<Home> {
               floatingActionButton: FloatingActionButton(
                 onPressed: null,
                 child: BlocBuilder<CartBloc, CartState>(
-                  buildWhen: (previous, current) => current.runtimeType == CartItemsCountState,
+                  buildWhen: (previous, current) => current.runtimeType != CartState,
                   builder: (context, state) {
-                    return Text("${state.cartAmount}");
+                    return Text("\u{20B9}${state.cartAmount}");
                   },
                 ),
               ),

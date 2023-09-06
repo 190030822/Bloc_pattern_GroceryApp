@@ -79,6 +79,10 @@ class ProductDataModel extends Product{
       inStockCount: 10);
   }
 
+  factory ProductDataModel.copyWith(ProductDataModel product) {
+    return new ProductDataModel(description: product.description, id: product.id, imageUrl: product.imageUrl, inStockCount: product.inStockCount, name: product.name, price: product.price, quantityInCart: product.quantityInCart);
+  }
+
   @override
   List<Object?> get props => [id, name, description, price, imageUrl, quantityInCart, inStockCount];
 }
