@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_tutorial/features/cart/bloc/cart_bloc.dart';
 import 'package:flutter_bloc_tutorial/features/home/bloc/home_bloc.dart';
-import 'package:flutter_bloc_tutorial/features/product/bloc/product_bloc.dart';
+import 'package:flutter_bloc_tutorial/features/product/bloc/bloc/product_bloc.dart';
 import 'package:flutter_bloc_tutorial/features/product/models/home_product_data_model.dart';
 
 class ProductTileWidget extends StatelessWidget {
@@ -42,55 +42,68 @@ class ProductTileWidget extends StatelessWidget {
               Text("\$" + productDataModel.price.toString(),
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), 
               BlocBuilder<ProductBloc, ProductState>(
+                bloc: productBloc,
+                buildWhen:(previous, current) {
+                  if (current.runtimeType == ProductCartActionState) {
+                    ProductCartActionState currState = current as ProductCartActionState;
+                    if (currState.productChanged.id == productDataModel.id) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  }
+                  return true;
+                },
                 builder: (context, productState) {
                   switch(productState.runtimeType) {
+                    case ProductCartActionState : {
+                      if (productDataModel.quantityInCart == 0) {
+                        return TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll(Colors.orange),
+                          ),
+                          onPressed: () {
+                            cartBloc.add(CartItemAddedToCartEvent(cartItem: productDataModel));
+                            productBloc.add(ProductCartActionEvent(productChanged: productDataModel));
+                          },
+                          child: Text("ADD", style: TextStyle(color: Colors.black),),
+                        );
+                      } else {
+                        return Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                cartBloc.add(CartRemoveFromCartEvent(cartItem : productDataModel));
+                                productBloc.add(ProductCartActionEvent(productChanged: productDataModel));
+                              }, 
+                              icon: Icon(Icons.remove_circle_outline, color: Colors.red,)
+                            ),
+                            Text("${productDataModel.quantityInCart}"),
+                            IconButton(
+                              onPressed: () {
+                                cartBloc.add(CartItemAddedToCartEvent(cartItem: productDataModel));
+                                productBloc.add(ProductCartActionEvent(productChanged: productDataModel));
+                              }, 
+                              icon: Icon(Icons.add_circle_outline_outlined, color: Colors.green,)
+                            ),
+                          ],
+                        );
+                      }
+                    }
                     case ProductInitial : {
                       return TextButton(
                         style: ButtonStyle(
                           backgroundColor: MaterialStatePropertyAll(Colors.orange),
                         ),
                         onPressed: () {
-                          productBloc.add(ProductAddedToCartEvent(productDataModel));
-                          homeBloc.add(HomeProductCartButtonClickedEvent(
-                            clickedProduct: productDataModel));
-                          cartBloc.add(CartItemsCountEvent(cartAmount: productDataModel.price));
+                          cartBloc.add(CartItemAddedToCartEvent(cartItem: productDataModel));
+                          productBloc.add(ProductCartActionEvent(productChanged: productDataModel));
                         },
                         child: Text("ADD", style: TextStyle(color: Colors.black),),
                       );
-                    } 
-                  }
-                    if (productDataModel.quantityInCart == 0) {
-                      return TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(Colors.orange),
-                        ),
-                        onPressed: () {
-                          if (state.runtimeType == HomeLoadedSuccessState) {
-                            productBloc.add(ProductAddedToCartEvent(productDataModel));
-                            homeBloc.add(HomeProductCartButtonClickedEvent(
-                              clickedProduct: productDataModel));
-                            cartBloc.add(CartItemsCountEvent(cartAmount: productDataModel.price));
-                          }
-                        },
-                        child: Text("ADD", style: TextStyle(color: Colors.black),),
-                      );
-                    } else {
-                        return Row(
-                          children: [
-                            IconButton(onPressed: () {
-                              productBloc.add(ProductRemovedFromCartEvent(productDataModel));
-                              cartBloc.add(CartRemoveFromCartEvent(productDataModel: productDataModel));
-                              cartBloc.add(CartItemsCountEvent(cartAmount: -productDataModel.price));
-                            }, icon: Icon(Icons.remove_circle_outline, color: Colors.red,)),
-                            Text("${productDataModel.quantityInCart}"),
-                            IconButton(onPressed: () {
-                              productBloc.add(ProductAddedToCartEvent(productDataModel));
-                              homeBloc.add(HomeProductCartButtonClickedEvent(clickedProduct: productDataModel));
-                              cartBloc.add(CartItemsCountEvent(cartAmount: productDataModel.price));
-                            }, icon: Icon(Icons.add_circle_outline_outlined, color: Colors.green,)),
-                          ],
-                        );
                     }
+                    default: return SizedBox();
+                  }
                 } 
               ),
               IconButton(

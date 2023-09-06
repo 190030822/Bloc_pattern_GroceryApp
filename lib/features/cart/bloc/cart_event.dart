@@ -9,13 +9,15 @@ class CartInitialEvent extends CartEvent{
 
 
 class CartRemoveFromCartEvent extends CartEvent {
-  final ProductDataModel productDataModel;
+  final ProductDataModel cartItem;
   CartRemoveFromCartEvent({
-    required this.productDataModel,
+    required this.cartItem,
   });
 }
 
-class CartItemsCountEvent extends CartEvent {
-  final double cartAmount;
-  CartItemsCountEvent({required this.cartAmount});
+class CartItemAddedToCartEvent extends CartEvent {
+  final ProductDataModel cartItem;
+  CartItemAddedToCartEvent({
+    required this.cartItem,
+  });
 }

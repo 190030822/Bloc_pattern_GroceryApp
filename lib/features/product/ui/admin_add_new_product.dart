@@ -51,144 +51,127 @@ class _AddNewProductState extends State<AddNewProduct> {
         appBar: AppBar(
           title: Text("Add New Product"),
         ),
-        body: BlocListener<AdminProductBloc, AdminProductState>(
-          listenWhen: (previous, current) => current is AdminProductListenState,
-          listener: (context, state) {
-            switch (state.runtimeType) {
-              case AdminAddProductErrorState:
-                {
-                  AdminAddProductErrorState adminAddProductErrorState =
-                      state as AdminAddProductErrorState;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(adminAddProductErrorState.errMsg)));
-                  break;
-                }
-              case AdminAddProductSuccessState:
-                {
-                  AdminAddProductSuccessState adminAddProductSuccessState = state as AdminAddProductSuccessState;
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(adminAddProductSuccessState.successMsg)));
-                  break;
-                }
-              default:
-                {}
-            }
-          },
-          child: SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.all(15),
-              margin: EdgeInsets.all(10),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ValueListenableBuilder<String>(
-                      valueListenable: _imageUrl,
-                      builder: (context, value, child) {
-                        return Container(
-                          padding: EdgeInsets.all(10),
-                          height: 100,
-                          width: 100,
-                          child: CircleAvatar(
-                            child: value != ""
-                                ? CircleAvatar(
-                                    child: Image.network(
-                                    value,
-                                  ))
-                                : Icon(Icons.image, size: 50),
-                            backgroundColor: figmaLightestGrey,
-                          ),
-                        );
-                      },
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: "karthik987753@gmail.com",
-                                password: "Karthik@2002");
-                        final pickedImage = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery);
-                        if (pickedImage != null) {
-                          if (kIsWeb) {
-                            final Uint8List bytes =
-                                await pickedImage.readAsBytes();
-                            _imageUrl.value = await uploadImageGetUrlWeb(
-                                bytes, pickedImage.name);
-                          } else {
-                            _imageUrl.value = await uploadImageGetUrl(
-                                pickedImage.path, pickedImage.name);
-                          }
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.all(15),
+            margin: EdgeInsets.all(10),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ValueListenableBuilder<String>(
+                    valueListenable: _imageUrl,
+                    builder: (context, value, child) {
+                      return Container(
+                        padding: EdgeInsets.all(10),
+                        height: 100,
+                        width: 100,
+                        child: CircleAvatar(
+                          child: value != ""
+                              ? CircleAvatar(
+                                  child: Image.network(
+                                  value,
+                                ))
+                              : Icon(Icons.image, size: 50),
+                          backgroundColor: figmaLightestGrey,
+                        ),
+                      );
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await FirebaseAuth.instance
+                          .signInWithEmailAndPassword(
+                              email: "karthik987753@gmail.com",
+                              password: "Karthik@2002");
+                      final pickedImage = await ImagePicker()
+                          .pickImage(source: ImageSource.gallery);
+                      if (pickedImage != null) {
+                        if (kIsWeb) {
+                          final Uint8List bytes =
+                              await pickedImage.readAsBytes();
+                          _imageUrl.value = await uploadImageGetUrlWeb(
+                              bytes, pickedImage.name);
+                        } else {
+                          _imageUrl.value = await uploadImageGetUrl(
+                              pickedImage.path, pickedImage.name);
                         }
+                      }
+                    },
+                    child: Text('Upload Image'),
+                  ),
+                  textField(
+                      controller: _productNameController,
+                      error: 'Please enter a product name',
+                      label: 'Product Name'),
+                  textField(
+                      controller: _descriptionController,
+                      error: 'Please enter a description',
+                      label: 'Description'),
+                  textField(
+                      controller: _priceController,
+                      error: 'Please enter a price',
+                      label: 'Price'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 0, vertical: 12),
+                    child: TextFormField(
+                      controller: _quanityController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          labelText: 'Quantity (1-20)',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: figmaOrange))),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a quantity';
+                        }
+                        final quantity = int.tryParse(value);
+                        if (quantity == null ||
+                            quantity < 1 ||
+                            quantity > 20) {
+                          return 'Please enter a valid quantity between 1 and 20';
+                        }
+                        return null;
                       },
-                      child: Text('Upload Image'),
                     ),
-                    textField(
-                        controller: _productNameController,
-                        error: 'Please enter a product name',
-                        label: 'Product Name'),
-                    textField(
-                        controller: _descriptionController,
-                        error: 'Please enter a description',
-                        label: 'Description'),
-                    textField(
-                        controller: _priceController,
-                        error: 'Please enter a price',
-                        label: 'Price'),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 0, vertical: 12),
-                      child: TextFormField(
-                        controller: _quanityController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                            labelText: 'Quantity (1-20)',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: figmaOrange))),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a quantity';
-                          }
-                          final quantity = int.tryParse(value);
-                          if (quantity == null ||
-                              quantity < 1 ||
-                              quantity > 20) {
-                            return 'Please enter a valid quantity between 1 and 20';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          final productName = _productNameController.text;
-                          final description = _descriptionController.text;
-                          final price = double.parse(_priceController.text);
-                          final inStockCount =
-                              int.parse(_quanityController.text);
+                  ),
+                  SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        final productName = _productNameController.text;
+                        final description = _descriptionController.text;
+                        final price = double.parse(_priceController.text);
+                        final inStockCount =
+                            int.parse(_quanityController.text);
 
-                          final product = Product(
-                              id: "",
-                              name: productName,
-                              description: description,
-                              price: price,
-                              imageUrl: _imageUrl.value ?? '',
-                              inStockCount: inStockCount);
+                        final product = Product(
+                            id: widget.product!= null ? widget.product!.id : "",
+                            name: productName,
+                            description: description,
+                            price: price,
+                            imageUrl: _imageUrl.value ?? '',
+                            inStockCount: inStockCount);
 
-                          final productFormBloc =
-                              BlocProvider.of<AdminProductBloc>(context);
+                        final productFormBloc =
+                            BlocProvider.of<AdminProductBloc>(context);
+                        
+                        if (widget.product == null) {
                           productFormBloc
                               .add(AdminAddProductEvent(newProduct: product));
-                          Navigator.pop(context);
+                        } else {
+                          productFormBloc.add(AdminEditProductEvent(editProduct: product));
                         }
-                      },
-                      child: Text('Submit'),
-                    ),
-                  ],
-                ),
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text('Submit'),
+                  ),
+                ],
               ),
             ),
           ),

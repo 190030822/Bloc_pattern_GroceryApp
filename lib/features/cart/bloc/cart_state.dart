@@ -2,31 +2,25 @@ part of 'cart_bloc.dart';
 
 @immutable
 abstract class CartState {
-    final int cartCount;
   final double cartAmount;
-  CartState(this.cartCount, this.cartAmount);
+  CartState(this.cartAmount);
 }
 
 abstract class CartActionState extends CartState {  
-  CartActionState(int cartCount, double cartAmount) : super(cartCount, cartAmount);
+  CartActionState(double cartAmount) : super(cartAmount);
 }
 
 class CartInitial extends CartState {
-  CartInitial(): super(0,0);
+  final List<ProductDataModel> cartItems;
+  CartInitial(double cartAmount, {
+    required this.cartItems,
+  }): super(cartAmount);
 }
 
 class CartSuccessState extends CartState {
   final List<ProductDataModel> cartItems;
-  CartSuccessState(int cartCount, double cartAmount, {
+  CartSuccessState(double cartAmount, {
     required this.cartItems,
-  }) : super(cartCount, cartAmount);
+  }) : super(cartAmount);
 }
 
-class CartRemoveItemMessageActionState extends CartActionState {
-  final ProductDataModel removedItem;
-  CartRemoveItemMessageActionState(int cartCount, double cartAmount, this.removedItem) : super(cartCount, cartAmount);
-}
-
-class CartItemsCountState extends CartState {
-  CartItemsCountState(int cartCount, double cartAmount) : super(cartCount, cartAmount);
-}

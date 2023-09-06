@@ -30,10 +30,7 @@ class _CartState extends State<Cart> {
       body: BlocConsumer<CartBloc, CartState>(
         bloc: cartBloc,
         listener: (context, state) {
-          if (state.runtimeType == CartRemoveItemMessageActionState) {
-            final cartRemovedItemState = state as CartRemoveItemMessageActionState;
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(" ${cartRemovedItemState.removedItem.name} Item removed Successfully")));
-          } 
+
         },
         listenWhen: (previous, current) => current is CartActionState,
         buildWhen: (previous, current) => current.runtimeType == CartSuccessState,

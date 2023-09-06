@@ -18,3 +18,23 @@ class AdminAddProductEvent extends AdminProductEvent {
   @override
   List<Object?> get props => [newProduct];
 }
+
+class AdminEditProductEvent extends AdminProductEvent {
+
+  final Product editProduct;
+  AdminEditProductEvent({required this.editProduct});
+  
+  @override
+  List<Object?> get props => [editProduct];
+}
+
+class AdminDeleteProductEvent extends AdminProductEvent {
+
+  final Product deleteProduct;
+  AdminDeleteProductEvent({required this.deleteProduct});
+  
+  @override
+  List<Object?> get props => [deleteProduct];
+
+
+}

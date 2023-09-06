@@ -1,6 +1,7 @@
 
 
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -13,20 +14,8 @@ class ItemsRepo {
 
   static Future<List<ProductDataModel>> fetchItems() async {
 
-    // final headers = {
-    //   'X-RapidAPI-Key': '5c3be384f8msh17483425c98d2d5p1ca71ajsn1b5e30a210e0',
-    //   'X-RapidAPI-Host': 'edamam-food-and-grocery-database.p.rapidapi.com'
-    // };
-
-    // final params = {
-    //   'nutrition-type': 'cooking',
-    //   'category[0]': 'generic-foods',
-    //   'health[0]': 'alcohol-free'
-    // };
-
     try {
       final Uri url =  Uri.parse("${baseUrl}/getProducts");
-      // url.replace(queryParameters: params);
       final response = await client.get(url);
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
@@ -36,7 +25,7 @@ class ItemsRepo {
         }
         return data;
       } else {
-        throw Exception("${response.statusCode} message");
+        throw Exception("${response.body} message");
       }
     } catch(e) {
       throw e;
@@ -45,17 +34,6 @@ class ItemsRepo {
   }
 
     static Future<List<Product>> adminFetchItems() async {
-
-    // final headers = {
-    //   'X-RapidAPI-Key': '5c3be384f8msh17483425c98d2d5p1ca71ajsn1b5e30a210e0',
-    //   'X-RapidAPI-Host': 'edamam-food-and-grocery-database.p.rapidapi.com'
-    // };
-
-    // final params = {
-    //   'nutrition-type': 'cooking',
-    //   'category[0]': 'generic-foods',
-    //   'health[0]': 'alcohol-free'
-    // };
 
     try {
       final Uri url =  Uri.parse("${baseUrl}/getProducts");
@@ -69,7 +47,7 @@ class ItemsRepo {
         }
         return data;
       } else {
-        throw Exception("${response.statusCode} message");
+        throw Exception("${response.body} message");
       }
     } catch(e) {
       print(e);
@@ -91,10 +69,48 @@ class ItemsRepo {
       if (response.statusCode == 200) {
         return Product.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception("${response.statusCode}");
+        throw Exception("${response.body}");
       }
       
     } catch(e) {
+      throw e;
+    }
+  }
+
+  static Future<Product> editProduct({required Product editProduct}) async {
+    try {
+      final Uri url = Uri.parse("${baseUrl}/updateProduct/${int.parse(editProduct.id)}");
+      final http.Response response = await client.put(url,
+        headers: {
+          "Content-type" : "application/json"
+        },
+        body: jsonEncode(editProduct.toJson())
+      );
+      if (response.statusCode == 200) {
+        return Product.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception(response.body);
+      }
+    } catch(e) {
+      throw e;
+    }
+  }
+
+  static FutureOr<void> deleteProduct({required Product delteProduct}) async {
+    try {
+      final Uri url = Uri.parse("${baseUrl}/deleteProduct/${int.parse(delteProduct.id)}");
+      final http.Response response = await client.delete(url,
+        headers: {
+          "Content-type" : "application/json"
+        },
+        body: jsonEncode(delteProduct.toJson())
+      );
+      if (response.statusCode == 200) {
+        return;
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (e) {
       throw e;
     }
   }
