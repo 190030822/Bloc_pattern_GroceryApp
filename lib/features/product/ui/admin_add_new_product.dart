@@ -64,27 +64,22 @@ class _AddNewProductState extends State<AddNewProduct> {
                     valueListenable: _imageUrl,
                     builder: (context, value, child) {
                       return Container(
-                        padding: EdgeInsets.all(10),
-                        height: 100,
-                        width: 100,
-                        child: CircleAvatar(
+                        margin: EdgeInsets.all(10),
+                        height: 120,
+                        width: 120,
+                        child: ClipOval(
                           child: value != ""
-                              ? CircleAvatar(
-                                  child: Image.network(
-                                  value,
-                                ))
-                              : Icon(Icons.image, size: 50),
-                          backgroundColor: figmaLightestGrey,
+                            ? Image.network(
+                              value,
+                              fit: BoxFit.cover,
+                            )
+                            : Icon(Icons.image, size: 120,),
                         ),
                       );
                     },
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      await FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: "karthik987753@gmail.com",
-                              password: "Karthik@2002");
                       final pickedImage = await ImagePicker()
                           .pickImage(source: ImageSource.gallery);
                       if (pickedImage != null) {

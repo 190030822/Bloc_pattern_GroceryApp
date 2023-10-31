@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_tutorial/configuration/utils/common_footer.dart';
 import 'package:flutter_bloc_tutorial/constants.dart';
+import 'package:flutter_bloc_tutorial/features/product/bloc/admin_product_bloc.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -10,6 +13,21 @@ class AdminHome extends StatefulWidget {
 }
 
 class _AdminHomeState extends State<AdminHome> {
+  late AdminProductBloc adminProductBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 0), () => FirebaseAuth.instance.signInAnonymously()); 
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    adminProductBloc = context.read<AdminProductBloc>();
+    adminProductBloc.add(AdminProductsLoadEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,14 +52,14 @@ class _AdminHomeState extends State<AdminHome> {
               leading: CircleAvatar(child: Icon(Icons.person)),
               title: Text('Profile'),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
               },
             ),
             ListTile(
               leading: CircleAvatar(child: Icon(Icons.logout)),
               title: Text('Logout'),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
               },
             ),
           ],
@@ -53,7 +71,7 @@ class _AdminHomeState extends State<AdminHome> {
       ),
       bottomNavigationBar: CommonFooterMenu(context).getFooterMenu(0),
       body: Container(
-         margin: EdgeInsets.all(10),
+        margin: EdgeInsets.all(10),
         child: Column(
           children: [
             Expanded(
@@ -67,23 +85,27 @@ class _AdminHomeState extends State<AdminHome> {
                     decoration: BoxDecoration(
                       color: figmaOrange,
                     ),
-                    child: Center(child: Text("Dashboard", style: TextStyle(fontWeight: FontWeight.bold),)),
+                    child: Center(
+                        child: Text(
+                      "Dashboard",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )),
                   ),
                   Container(
-                    child: Row(
-                      children: [
-                        dashboardBlock("No of products", "100"),
-                        dashboardBlock("No of users", "50"),
-                      ]
-                    ),
+                    child: Row(children: [
+                      BlocBuilder<AdminProductBloc, AdminProductState>(
+                        builder: (context, state) {
+                          return dashboardBlock(no_of_products, "100");
+                        },
+                      ),
+                      dashboardBlock(no_of_users, "50"),
+                    ]),
                   ),
                   Container(
-                    child: Row(
-                      children: [
-                        dashboardBlock("No of orders", "100"),
-                        dashboardBlock("Orders rate", "2%"),
-                      ]
-                    ),
+                    child: Row(children: [
+                      dashboardBlock(no_of_orders, "100"),
+                      dashboardBlock(orders_rate, "2%"),
+                    ]),
                   ),
                 ],
               ),
@@ -105,12 +127,13 @@ class _AdminHomeState extends State<AdminHome> {
               //   ],
               // )
             )
-        ],),
+          ],
+        ),
       ),
     );
   }
 
-    Widget dashboardBlock(String heading, String data) {
+  Widget dashboardBlock(String heading, String data) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(10),
@@ -119,13 +142,31 @@ class _AdminHomeState extends State<AdminHome> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("$heading", style: TextStyle(fontWeight: FontWeight.bold),),
-              Text("$data", style: TextStyle(color: Colors.blue),)
+              Text(
+                heading,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              BlocBuilder<AdminProductBloc, AdminProductState>(
+                buildWhen: (previous, current) => (current is AdminProductsLoadedState || current is AdminProductInitial),
+                builder: (context, state) {
+                  switch(state.runtimeType) {
+                    case AdminProductInitial : return CircularProgressIndicator();
+                    case AdminProductsLoadedState : {
+                      AdminProductsLoadedState adminProductsLoadedState = state as AdminProductsLoadedState;
+                      return Text(
+                        "${adminProductsLoadedState.products.length}",
+                        style: TextStyle(color: Colors.blue),
+                      );
+                    } 
+                    default:return Text(data, style: TextStyle(color: Colors.blue));
+                  }
+                  
+                },
+              )
             ],
           ),
         ),
       ),
     );
   }
-  
 }

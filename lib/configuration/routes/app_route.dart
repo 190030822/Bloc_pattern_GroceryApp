@@ -1,13 +1,11 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_tutorial/features/admin/ui/admin.dart';
 import 'package:flutter_bloc_tutorial/features/admin/ui/admin_home.dart';
 import 'package:flutter_bloc_tutorial/features/cart/ui/cart.dart';
 import 'package:flutter_bloc_tutorial/features/home/ui/home.dart';
-import 'package:flutter_bloc_tutorial/features/login/ui/loginPage.dart';
 import 'package:flutter_bloc_tutorial/features/product/ui/admin_add_new_product.dart';
 import 'package:flutter_bloc_tutorial/features/product/ui/admin_products_list_screen.dart';
+import 'package:flutter_bloc_tutorial/features/user/ui/login_page.dart';
+import 'package:flutter_bloc_tutorial/features/user/ui/signup_page.dart';
 import 'package:flutter_bloc_tutorial/features/wishlist/ui/wishlist.dart';
 
 class AppRouter {
@@ -23,6 +21,7 @@ class AppRouter {
       case '/userCart' : return MaterialPageRoute(builder: (context) => Cart());
       case '/userWishList' : return MaterialPageRoute(builder: (context) => Wishlist());
       case '/adminAddNewProduct' : return MaterialPageRoute(builder: (context) => AddNewProduct());
+      case '/userSignUp' : return MaterialPageRoute(builder: (context) => SignUp());
       default: return MaterialPageRoute(builder: (context) => Login());
     }
   }
