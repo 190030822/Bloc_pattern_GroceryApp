@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_tutorial/configuration/utils/user_local_data.dart';
+import 'package:flutter_bloc_tutorial/constants.dart';
 import 'package:flutter_bloc_tutorial/features/cart/bloc/cart_bloc.dart';
-import 'package:flutter_bloc_tutorial/features/cart/ui/cart.dart';
 import 'package:flutter_bloc_tutorial/features/home/bloc/home_bloc.dart';
 import 'package:flutter_bloc_tutorial/features/product/ui/product_tile_widget.dart';
-import 'package:flutter_bloc_tutorial/features/wishlist/ui/wishlist.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -103,6 +103,22 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
+              drawer: Drawer(
+                child: ListView(
+                  children: [
+                      ListTile(
+                        title: Text("Welcome ${UserLocalData.getUserName()}"),
+                      ),
+                      ListTile(
+                        title: Text("Logout"),
+                        leading: Icon(Icons.logout),
+                        onTap: () {
+                          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                        }
+                      ),
+                  ]
+                ),
+              ),
               floatingActionButton: FloatingActionButton(
                 onPressed: null,
                 child: BlocBuilder<CartBloc, CartState>(
@@ -125,7 +141,7 @@ class _HomeState extends State<Home> {
           case HomeErrorState:
             final homeErrorSate = state as HomeErrorState;
             return Scaffold(
-                body: Center(child: Text('${homeErrorSate.errorMessage}', style: TextStyle(color: Colors.pink),)));
+                body: Center(child: Text('${homeErrorSate.errorMessage}', style: TextStyle(color: Colors.red),)));
           default:
             return SizedBox();
         }

@@ -1,34 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_tutorial/configuration/utils/common_footer.dart';
-import 'package:flutter_bloc_tutorial/features/error/bloc/error_bloc.dart';
 import 'package:flutter_bloc_tutorial/features/product/bloc/admin_product_bloc.dart';
-import 'package:flutter_bloc_tutorial/features/product/ui/admin_add_new_product.dart';
 import 'package:flutter_bloc_tutorial/features/product/ui/admin_product_tile_widget.dart';
 
-class AdminProductsListScreen extends StatefulWidget {
+class AdminProductsListScreen extends StatelessWidget {
   const AdminProductsListScreen({super.key});
 
   @override
-  State<AdminProductsListScreen> createState() => _AdminProductsListScreenState();
-}
-
-class _AdminProductsListScreenState extends State<AdminProductsListScreen> {
-
-  late ErrorBloc errorBloc;
-  late AdminProductBloc adminProductBloc;
-
-  @override
-  void didChangeDependencies() {
-    adminProductBloc = context.read<AdminProductBloc>();
-    errorBloc = context.read<ErrorBloc>();
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-
-    adminProductBloc.add(AdminProductsLoadEvent());
     return Scaffold(
       appBar: AppBar(
         title: Text("Products List"),

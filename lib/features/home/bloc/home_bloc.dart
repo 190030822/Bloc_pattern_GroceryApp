@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_bloc_tutorial/data/cart_items.dart';
 import 'package:flutter_bloc_tutorial/data/wishlist_items.dart';
 import 'package:flutter_bloc_tutorial/features/product/models/home_product_data_model.dart';
 import 'package:flutter_bloc_tutorial/features/home/repos/items_repo.dart';
