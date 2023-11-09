@@ -20,7 +20,7 @@ class AppRouter {
       case '/userHome' : return MaterialPageRoute(builder: (context) => Home());
       case '/userCart' : return MaterialPageRoute(builder: (context) => Cart());
       case '/userWishList' : return MaterialPageRoute(builder: (context) => Wishlist());
-      case '/adminAddNewProduct' : return MaterialPageRoute(builder: (context) => AddNewProduct());
+      case '/adminAddNewProduct' : return MaterialPageRoute(builder: (context) => AddNewProduct(), settings: routeSettings);
       case '/userSignUp' : return MaterialPageRoute(builder: (context) => SignUp());
       default: return MaterialPageRoute(builder: (context) => Login());
     }

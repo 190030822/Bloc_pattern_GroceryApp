@@ -59,7 +59,7 @@ class _AdminHomeState extends State<AdminHome> {
               leading: CircleAvatar(child: Icon(Icons.logout)),
               title: Text('Logout'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
               },
             ),
           ],

@@ -9,7 +9,7 @@ import 'package:flutter_bloc_tutorial/features/product/models/home_product_data_
 
 class ItemsRepo {
 
-  static final String baseUrl = "http://localhost:8080";
+  static final String baseUrl = "https://grocery-backend-u1t9.onrender.com";
   static var client = http.Client();
 
   static Future<List<ProductDataModel>> fetchItems() async {

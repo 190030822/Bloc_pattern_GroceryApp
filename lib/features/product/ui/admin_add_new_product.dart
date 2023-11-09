@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,30 +9,43 @@ import 'package:flutter_bloc_tutorial/features/product/models/home_product_data_
 import 'package:image_picker/image_picker.dart';
 
 class AddNewProduct extends StatefulWidget {
-  final Product? product;
-  AddNewProduct({super.key, this.product});
+  AddNewProduct({super.key});
 
   @override
   State<AddNewProduct> createState() => _AddNewProductState();
 }
 
 class _AddNewProductState extends State<AddNewProduct> {
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quanityController = TextEditingController();
   late ValueNotifier<String> _imageUrl;
+  late final Product? product;
+
 
   @override
   void initState() {
     super.initState();
-    if (widget.product != null) {
-      _productNameController.text = widget.product!.name;
-      _descriptionController.text = widget.product!.description;
-      _priceController.text = widget.product!.price.toString();
-      _imageUrl = ValueNotifier(widget.product!.imageUrl);
-      _quanityController.text = widget.product!.inStockCount.toString();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print(ModalRoute.of(context));
+    if (ModalRoute.of(context)!.settings.arguments != null) {
+      product = ModalRoute.of(context)!.settings.arguments as Product;
+    } else {
+      product = null;
+    }
+    if (product != null) {
+      _productNameController.text = product!.name;
+      _descriptionController.text = product!.description;
+      _priceController.text = product!.price.toString();
+      _imageUrl = ValueNotifier(product!.imageUrl);
+      _quanityController.text = product!.inStockCount.toString();
     } else {
       _imageUrl = ValueNotifier("");
     }
@@ -42,6 +53,7 @@ class _AddNewProductState extends State<AddNewProduct> {
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -144,8 +156,8 @@ class _AddNewProductState extends State<AddNewProduct> {
                         final inStockCount =
                             int.parse(_quanityController.text);
 
-                        final product = Product(
-                            id: widget.product!= null ? widget.product!.id : "",
+                        final newProduct = Product(
+                            id: product!= null ? product!.id : "",
                             name: productName,
                             description: description,
                             price: price,
@@ -155,11 +167,11 @@ class _AddNewProductState extends State<AddNewProduct> {
                         final productFormBloc =
                             BlocProvider.of<AdminProductBloc>(context);
                         
-                        if (widget.product == null) {
+                        if (product == null) {
                           productFormBloc
-                              .add(AdminAddProductEvent(newProduct: product));
+                              .add(AdminAddProductEvent(newProduct: newProduct));
                         } else {
-                          productFormBloc.add(AdminEditProductEvent(editProduct: product));
+                          productFormBloc.add(AdminEditProductEvent(editProduct: newProduct));
                         }
                         Navigator.pop(context);
                       }

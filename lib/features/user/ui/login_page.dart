@@ -82,11 +82,15 @@ class _LoginState extends State<Login> {
                       label: Text("Login"),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          if (_emailController.text == UserLocalData.getUserName() && _passwordController.text == UserLocalData.getPassword()) {
+                          if (_emailController.text == "admin@gmail.com") {
+                            Navigator.pushNamed(context, '/adminHome');
+                          } else {
+                            if (_emailController.text == UserLocalData.getUserName() && _passwordController.text == UserLocalData.getPassword()) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successfull")));
                             Navigator.pushNamed(context, '/userHome');
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Invalid Credentials")));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Invalid Credentials")));
+                            }
                           }
                         }
                       },

@@ -29,7 +29,7 @@ class ProductsList extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
           IconButton(onPressed: () {
-            Navigator.pushNamed(context, '/adminAddNewProduct');
+            Navigator.pushNamed(context, '/adminAddNewProduct', arguments: product);
           }, icon: Icon(Icons.edit)),
           IconButton(onPressed: () => adminProductBloc.add(AdminDeleteProductEvent(deleteProduct: product)), icon: Icon(Icons.delete))
         ]),
